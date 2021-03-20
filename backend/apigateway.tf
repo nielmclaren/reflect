@@ -26,6 +26,34 @@ resource "aws_api_gateway_resource" "entry_id_resource" {
   path_part   = "{entryId}"
 }
 
+resource "aws_api_gateway_method" "entry_id_options_method" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  resource_id   = aws_api_gateway_resource.entry_id_resource.id
+  http_method   = "OPTIONS"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_method_settings" "container_id_options_method_settings" {
+  rest_api_id = aws_api_gateway_rest_api.api.id
+  stage_name  = aws_api_gateway_stage.api_dev_stage.stage_name
+  method_path = "${aws_api_gateway_resource.entry_id_resource.path_part}/${aws_api_gateway_method.entry_id_options_method.http_method}"
+
+  settings {
+    logging_level      = "INFO"
+    data_trace_enabled = true
+    metrics_enabled    = true
+  }
+}
+
+resource "aws_api_gateway_integration" "entry_id_options_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.api.id
+  resource_id             = aws_api_gateway_resource.entry_id_resource.id
+  http_method             = aws_api_gateway_method.entry_id_options_method.http_method
+  integration_http_method = "POST" # Lambda integration method is always POST, even for GET
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.api_handler_lambda.invoke_arn
+}
+
 resource "aws_api_gateway_method" "entry_id_get_method" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_resource.entry_id_resource.id
@@ -102,6 +130,7 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   }
 
   depends_on = [
+    aws_api_gateway_integration.entry_id_options_integration,
     aws_api_gateway_integration.entry_id_get_integration,
     aws_api_gateway_integration.entry_id_post_integration,
   ]
