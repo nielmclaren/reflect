@@ -1,3 +1,6 @@
+import { response } from "./src/response";
+import { handleEntriesGet } from "./src/handleEntries";
+
 export async function handler(event, context) {
   console.log("Invoke lambda.");
   console.log("event");
@@ -5,20 +8,11 @@ export async function handler(event, context) {
   console.log("context");
   console.log(context);
 
-  let allowOrigin = "https://reflect.nielmclaren.com";
-  if (event.headers && event.headers.origin && event.headers.origin === "http://localhost:3000") {
-    // Make local development easier.
-    allowOrigin = event.headers.origin;
+  const { httpMethod, pathParameters } = event;
+  switch (httpMethod) {
+    case 'GET':
+      return await handleEntriesGet(event, pathParameters.entryId);
   }
 
-  return {
-    isBase64Encoded: false,
-    statusCode: 200,
-    body: JSON.stringify({ body: "Rock that!" }),
-    headers: {
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Allow-Origin": allowOrigin,
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-    },
-  };
+  return response(event, 200, {});
 }
