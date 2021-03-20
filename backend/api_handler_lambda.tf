@@ -32,3 +32,20 @@ resource "aws_iam_role" "api_handler_role" {
   path               = "/system/"
   assume_role_policy = data.aws_iam_policy_document.api_handler_policy_document.json
 }
+
+data aws_iam_policy_document api_handler_logging_policy_document {
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource aws_iam_role_policy api_handler_logging {
+  name   = "ApiHandlerLogging"
+  role   = aws_iam_role.api_handler_role.name
+  policy = data.aws_iam_policy_document.api_handler_logging_policy_document.json
+}
