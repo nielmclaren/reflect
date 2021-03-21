@@ -13,6 +13,10 @@ export class Database {
         return null;
     }
 
+    async updateEntry(entry: any): Promise<void> {
+        await this.entry.update(entry);
+    }
+
     constructor(tableName: string, documentClient: DocumentClient) {
         this.table = new Table({
             name: tableName,

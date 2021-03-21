@@ -1,7 +1,7 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 import { Database } from './src/database';
-import { handleEntriesGet } from "./src/handleEntries";
+import { handleEntriesGet, handleEntriesPost } from "./src/handleEntries";
 import { response } from "./src/response";
 
 let isInitialized = false;
@@ -16,12 +16,14 @@ export async function handler(event, context) {
 
   await initialize();
 
-  const { httpMethod, pathParameters } = event;
-  switch (httpMethod) {
+  let dependencies = { database };
+  switch (event.httpMethod) {
     case 'GET':
       console.log("Handling GET request.");
-      const dependencies = { database };
-      return await handleEntriesGet(event, pathParameters.entryId, dependencies);
+      return await handleEntriesGet(event, event.pathParameters.entryId, dependencies);
+    case 'POST':
+      console.log("Handling POST request.");
+      return await handleEntriesPost(event, event.pathParameters.entryId, JSON.parse(event.body), dependencies);
     case 'OPTIONS':
       console.log("Handling OPTIONS request.");
       return await response(event, 200, {});
