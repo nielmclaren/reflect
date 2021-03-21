@@ -13,3 +13,9 @@ resource aws_dynamodb_table reflect_table {
     type = "S"
   }
 }
+
+output reflect_table {
+  value = {
+    arn = aws_dynamodb_table.reflect_table.arn
+  }
+}

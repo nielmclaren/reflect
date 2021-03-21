@@ -33,7 +33,7 @@ resource "aws_iam_role" "api_handler_role" {
   assume_role_policy = data.aws_iam_policy_document.api_handler_policy_document.json
 }
 
-data aws_iam_policy_document api_handler_logging_policy_document {
+data "aws_iam_policy_document" "api_handler_logging_policy_document" {
   statement {
     actions = [
       "logs:CreateLogGroup",
@@ -48,4 +48,26 @@ resource aws_iam_role_policy api_handler_logging {
   name   = "ApiHandlerLogging"
   role   = aws_iam_role.api_handler_role.name
   policy = data.aws_iam_policy_document.api_handler_logging_policy_document.json
+}
+
+data "aws_iam_policy_document" "api_handler_dynamodb_policy_document" {
+  statement {
+    actions = [
+      "dynamodb:BatchGetItem",
+      "dynamodb:GetItem",
+      "dynamodb:Query",
+      "dynamodb:Scan",
+      "dynamodb:BatchWriteItem",
+      "dynamodb:PutItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:DeleteItem"
+    ]
+    resources = ["${local.reflect_table_arn}", "${local.reflect_table_arn}/*"]
+  }
+}
+
+resource aws_iam_role_policy analytics_disconnect_dynamodb_policy {
+  name = "ApiHandlerDynamoDB"
+  role   = aws_iam_role.api_handler_role.name
+  policy = data.aws_iam_policy_document.api_handler_dynamodb_policy_document.json
 }

@@ -33,7 +33,7 @@ export default function App() {
 }
 
 async function getEntry(entryId) {
-  const url = "https://reflect-api.nielmclaren.com/api/v1/entries/0";
+  const url = "https://reflect-api.nielmclaren.com/api/v1/entries/2021-01-01";
   const options = {
     method: "GET",
     mode: "cors",
