@@ -10,7 +10,7 @@ export function response(event: any, statusCode: number, body: any): any {
         statusCode,
         body: JSON.stringify(body),
         headers: {
-            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Headers": "Authorization,Content-Type",
             "Access-Control-Allow-Origin": allowOrigin,
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         },

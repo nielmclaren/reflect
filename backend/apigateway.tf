@@ -58,7 +58,7 @@ resource "aws_api_gateway_method" "entry_id_get_method" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_resource.entry_id_resource.id
   http_method   = "GET"
-  authorization = "NONE"
+  authorization = "AWS_IAM"
 }
 
 resource "aws_api_gateway_method_settings" "container_id_get_method_settings" {
@@ -86,7 +86,7 @@ resource "aws_api_gateway_method" "entry_id_post_method" {
   rest_api_id   = aws_api_gateway_rest_api.api.id
   resource_id   = aws_api_gateway_resource.entry_id_resource.id
   http_method   = "POST"
-  authorization = "NONE"
+  authorization = "AWS_IAM"
 }
 
 resource "aws_api_gateway_method_settings" "container_id_post_method_settings" {
