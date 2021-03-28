@@ -33,7 +33,7 @@ resource "aws_api_gateway_method" "entry_id_options_method" {
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_method_settings" "container_id_options_method_settings" {
+resource "aws_api_gateway_method_settings" "entry_id_options_method_settings" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_stage.api_dev_stage.stage_name
   method_path = "${aws_api_gateway_resource.entry_id_resource.path_part}/${aws_api_gateway_method.entry_id_options_method.http_method}"
@@ -61,7 +61,7 @@ resource "aws_api_gateway_method" "entry_id_get_method" {
   authorization = "AWS_IAM"
 }
 
-resource "aws_api_gateway_method_settings" "container_id_get_method_settings" {
+resource "aws_api_gateway_method_settings" "entry_id_get_method_settings" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_stage.api_dev_stage.stage_name
   method_path = "${aws_api_gateway_resource.entry_id_resource.path_part}/${aws_api_gateway_method.entry_id_get_method.http_method}"
@@ -89,7 +89,7 @@ resource "aws_api_gateway_method" "entry_id_post_method" {
   authorization = "AWS_IAM"
 }
 
-resource "aws_api_gateway_method_settings" "container_id_post_method_settings" {
+resource "aws_api_gateway_method_settings" "entry_id_post_method_settings" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_stage.api_dev_stage.stage_name
   method_path = "${aws_api_gateway_resource.entry_id_resource.path_part}/${aws_api_gateway_method.entry_id_post_method.http_method}"
@@ -136,7 +136,7 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   ]
 }
 
-resource "aws_lambda_permission" "analytics_container_events_invoke_permission" {
+resource "aws_lambda_permission" "api_handler_lambda_invoke_permission" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.api_handler_lambda.function_name
   principal     = "apigateway.amazonaws.com"

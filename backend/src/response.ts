@@ -1,17 +1,11 @@
 export function response(event: any, statusCode: number, body: any): any {
-    let allowOrigin = "https://reflect.nielmclaren.com";
-    if (event.headers && event.headers.origin && event.headers.origin === "http://localhost:3000") {
-        // Make local development easier.
-        allowOrigin = event.headers.origin;
-    }
-
     return {
         isBase64Encoded: false,
         statusCode,
         body: JSON.stringify(body),
         headers: {
-            "Access-Control-Allow-Headers": "Authorization,Content-Type",
-            "Access-Control-Allow-Origin": allowOrigin,
+            "Access-Control-Allow-Headers": "Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token",
+            "Access-Control-Allow-Origin": "https://reflect.nielmclaren.com",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         },
     };

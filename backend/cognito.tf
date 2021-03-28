@@ -56,7 +56,7 @@ data "aws_iam_policy_document" "authenticated_policy_document" {
     actions = [
       "execute-api:*"
     ]
-    resources = ["arn:aws:execute-api:us-west-2:695408758741:wjgxkci293/*"]
+    resources = ["${aws_api_gateway_rest_api.api.execution_arn}/*"]
   }
 }
 

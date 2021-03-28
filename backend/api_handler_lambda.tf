@@ -66,7 +66,7 @@ data "aws_iam_policy_document" "api_handler_dynamodb_policy_document" {
   }
 }
 
-resource aws_iam_role_policy analytics_disconnect_dynamodb_policy {
+resource aws_iam_role_policy api_handler_lambda_dynamodb_policy {
   name = "ApiHandlerDynamoDB"
   role   = aws_iam_role.api_handler_role.name
   policy = data.aws_iam_policy_document.api_handler_dynamodb_policy_document.json

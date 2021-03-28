@@ -12,3 +12,6 @@ init:
 
 apply:
 	aws-vault exec nielmclaren -- terraform apply
+
+destroy:
+	aws-vault exec nielmclaren -- terraform destroy
