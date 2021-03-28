@@ -100,7 +100,7 @@ export default function App() {
 
       // Add the Google access token to the Amazon Cognito credentials login map.
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: 'us-west-2:f5fc949f-7c87-440c-932f-4f01ffc33569',
+        IdentityPoolId: process.env.REACT_APP_IDENTITY_POOL_ID,
         Logins: { 'accounts.google.com': googleUser.getAuthResponse().id_token },
       });
       AWS.config.region = 'us-west-2';
