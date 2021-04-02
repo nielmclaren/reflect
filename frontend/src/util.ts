@@ -16,4 +16,8 @@ export class Util {
     static isLocalhost() {
         return window.location.href.startsWith("http://localhost:3000");
     }
+
+    static async sleep(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }

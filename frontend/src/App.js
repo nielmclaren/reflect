@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import { AwsClient } from 'aws4fetch'
 import { GoogleLogin } from 'react-google-login';
-import { Button, TextField } from '@material-ui/core';
+import { Button, CircularProgress, TextField } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { useEffect, useState } from "react";
@@ -14,12 +14,15 @@ import "./App.css";
 export default function App() {
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   const [backend, setBackend] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(true);
   const [viewBody, setViewBody] = useState("");
   const [viewDate, setViewDate] = useState(new Date());
 
   useEffect(() => {
     (async function viewDateChanged() {
       console.log("viewDateChanged()");
+      setViewBody("");
+      setIsLoading(true);
 
       if (!backend) {
         console.log("Backend not ready yet.");
@@ -34,6 +37,7 @@ export default function App() {
       if (entry) {
         setViewBody(entry.body);
       }
+      setIsLoading(false);
     })();
   }, [backend, viewDate]);
 
@@ -83,11 +87,13 @@ export default function App() {
       body: viewBody,
     };
 
+    setIsLoading(true);
     if (await backend.postEntry(entry)) {
       console.log("Success");
     } else {
       console.log("Failure");
     }
+    setIsLoading(false);
   }
 
   let loginButton = "";
@@ -112,6 +118,7 @@ export default function App() {
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <DatePicker
           autoOk={true}
+          disabled={isLoading}
           disableFuture={true}
           fullWidth={true}
           inputVariant="outlined"
@@ -122,6 +129,7 @@ export default function App() {
       </MuiPickersUtilsProvider>
 
       <TextField id="body"
+        disabled={isLoading}
         fullWidth={true}
         label="Body"
         margin="normal"
@@ -137,8 +145,10 @@ export default function App() {
         color="primary"
         fullWidth={true}
         margin="normal"
-        onClick={event => handleSubmit()}
-        variant="contained">Submit</Button>
+        disabled={isLoading}
+        onClick={handleSubmit}
+        variant="contained"
+      >{isLoading ? <CircularProgress size={24} /> : 'Submit'}</Button>
     </div>;
   }
 
