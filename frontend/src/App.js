@@ -4,99 +4,38 @@ import { GoogleLogin } from 'react-google-login';
 import { Button, TextField } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-
 import { useEffect, useState } from "react";
+
+import { Backend } from './backend';
+import { MockBackend } from './mockBackend';
+import { Util } from './util';
 import "./App.css";
 
 export default function App() {
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  const [awsClient, setAwsClient] = useState(undefined);
-  const [body, setBody] = useState("");
-  const [entry, setEntry] = useState({});
-  const [selectedDate, setDate] = useState(new Date());
+  const [backend, setBackend] = useState(undefined);
+  const [viewBody, setViewBody] = useState("");
+  const [viewDate, setViewDate] = useState(new Date());
 
   useEffect(() => {
-    console.log("useEffect");
-    effect();
+    (async function viewDateChanged() {
+      console.log("viewDateChanged()");
 
-    async function effect() {
-      const entry = await getEntry('2021-01-01');
+      if (!backend) {
+        console.log("Backend not ready yet.");
+        return;
+      }
+
+      console.log("viewDate", viewDate, viewDate.toISOString());
+      const entryId = viewDate.toISOString().slice(0, 10);
+      console.log("entryId", entryId);
+      const entry = await backend.getEntry(entryId);
       console.log("entry", entry);
       if (entry) {
-        setBody(entry.body);
-        setEntry(entry);
+        setViewBody(entry.body);
       }
-    }
-
-    async function getEntry(entryId) {
-      console.log("getEntry", entryId);
-
-      if (!awsClient) {
-        console.log("No AWS client yet.");
-        return null;
-      }
-
-      const url = "https://reflect-api.nielmclaren.com/api/v1/entries/2021-01-01";
-      const options = {
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json;charset=UTF-8",
-        },
-        method: 'GET',
-        mode: "cors",
-      };
-      const response = await awsClient.fetch(url, options);
-      if (response && response.ok) {
-        return await response.json();
-      }
-      return null;
-    }
-  }, [awsClient]);
-
-
-  async function postEntry(entry) {
-    console.log("postEntry", entry);
-
-    if (!awsClient) {
-      console.log("No AWS client yet.");
-      return null;
-    }
-
-    const url = `https://reflect-api.nielmclaren.com/api/v1/entries/${entry.entryId}`;
-    const options = {
-      body: JSON.stringify(entry),
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json;charset=UTF-8",
-      },
-      method: "POST",
-      mode: "cors",
-    };
-    const response = await awsClient.fetch(url, options);
-    if (response && response.ok) {
-      return true;
-    }
-    return null;
-  }
-
-  async function handleSubmit() {
-    console.log("Handle submit.");
-    const prevEntry = Object.assign({}, entry); // Shallow copy only.
-    const nextEntry = {
-      entryId: '2021-01-01',
-      body: body,
-    };
-
-    // Optimistic
-    setEntry(nextEntry);
-
-    if (await postEntry(nextEntry)) {
-      console.log("Success");
-    } else {
-      console.log("Failure");
-      setEntry(prevEntry);
-    }
-  }
+    })();
+  }, [backend, viewDate]);
 
   function responseGoogle(googleUser) {
     if (googleUser.isSignedIn()) {
@@ -117,32 +56,59 @@ export default function App() {
         console.log("AWS get credentials callback invoked.");
         console.log("error", err);
 
-        setAwsClient(new AwsClient({
+        setBackend(new Backend(new AwsClient({
           secretAccessKey: AWS.config.credentials.secretAccessKey,
           accessKeyId: AWS.config.credentials.accessKeyId,
           sessionToken: AWS.config.credentials.sessionToken,
           service: 'execute-api',
           region: 'us-west-2',
-        }));
+        })));
       });
     }
     else {
-      console.log("Not signed in.");
+      throw new Error("Got Google response but not signed in.");
     }
   }
 
-  return (
-    <div className="App">
+  async function handleSubmit() {
+    console.log("Handle submit.");
 
-      <GoogleLogin
-        clientId={googleClientId}
-        buttonText="Login"
-        onSuccess={responseGoogle}
-        onFailure={responseGoogle}
-        cookiePolicy={'single_host_origin'}
-        isSignedIn={true}
-      />
+    if (!backend) {
+      console.log("Backend not ready yet.");
+      return;
+    }
 
+    const entry = {
+      entryId: Util.dateToString(viewDate),
+      body: viewBody,
+    };
+
+    if (await backend.postEntry(entry)) {
+      console.log("Success");
+    } else {
+      console.log("Failure");
+    }
+  }
+
+  let loginButton = "";
+  if (Util.isLocalhost()) {
+    if (!backend) {
+      setBackend(new MockBackend());
+    }
+  } else {
+    loginButton = <GoogleLogin
+      clientId={googleClientId}
+      buttonText="Login"
+      onSuccess={responseGoogle}
+      onFailure={responseGoogle}
+      cookiePolicy={'single_host_origin'}
+      isSignedIn={true}
+    />;
+  }
+
+  let form = "";
+  if (backend) {
+    form = <div>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <DatePicker
           autoOk={true}
@@ -150,8 +116,8 @@ export default function App() {
           fullWidth={true}
           inputVariant="outlined"
           margin="normal"
-          onChange={value => setDate(value)}
-          value={selectedDate}
+          onChange={value => setViewDate(value)}
+          value={viewDate}
         />
       </MuiPickersUtilsProvider>
 
@@ -160,10 +126,10 @@ export default function App() {
         label="Body"
         margin="normal"
         multiline={true}
-        onChange={event => setBody(event.target.value)}
+        onChange={event => setViewBody(event.target.value)}
         required={true}
         rows="12"
-        value={body}
+        value={viewBody}
         variant="outlined"
       />
 
@@ -172,7 +138,14 @@ export default function App() {
         fullWidth={true}
         margin="normal"
         onClick={event => handleSubmit()}
-        variant="contained" >Submit</Button>
+        variant="contained">Submit</Button>
+    </div>;
+  }
+
+  return (
+    <div className="App">
+      {loginButton}
+      {form}
     </div>
   );
 }
