@@ -145,9 +145,9 @@ export default function App() {
 
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <DatePicker
-          autoOk="true"
-          disableFuture="true"
-          fullWidth="true"
+          autoOk={true}
+          disableFuture={true}
+          fullWidth={true}
           inputVariant="outlined"
           margin="normal"
           onChange={value => setDate(value)}
@@ -156,12 +156,12 @@ export default function App() {
       </MuiPickersUtilsProvider>
 
       <TextField id="body"
-        fullWidth="true"
+        fullWidth={true}
         label="Body"
         margin="normal"
-        multiline="true"
+        multiline={true}
         onChange={event => setBody(event.target.value)}
-        required="true"
+        required={true}
         rows="12"
         value={body}
         variant="outlined"
@@ -169,7 +169,7 @@ export default function App() {
 
       <Button
         color="primary"
-        fullWidth="true"
+        fullWidth={true}
         margin="normal"
         onClick={event => handleSubmit()}
         variant="contained" >Submit</Button>
