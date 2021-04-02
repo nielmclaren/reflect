@@ -12,11 +12,11 @@ import { Util } from './util';
 import "./App.css";
 
 export default function App() {
-  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  const [backend, setBackend] = useState(undefined);
-  const [isLoading, setIsLoading] = useState(true);
-  const [viewBody, setViewBody] = useState("");
-  const [viewDate, setViewDate] = useState(new Date());
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
+  const [backend, setBackend] = useState<Backend | MockBackend | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [viewBody, setViewBody] = useState<string>("");
+  const [viewDate, setViewDate] = useState<Date>(new Date());
 
   useEffect(() => {
     (async function viewDateChanged() {
@@ -41,13 +41,13 @@ export default function App() {
     })();
   }, [backend, viewDate]);
 
-  function responseGoogle(googleUser) {
+  function responseGoogle(googleUser: any) {
     if (googleUser.isSignedIn()) {
       console.log("Signed in.");
 
       // Add the Google access token to the Amazon Cognito credentials login map.
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: process.env.REACT_APP_IDENTITY_POOL_ID,
+        IdentityPoolId: process.env.REACT_APP_IDENTITY_POOL_ID || "",
         Logins: { 'accounts.google.com': googleUser.getAuthResponse().id_token },
       });
       AWS.config.region = 'us-west-2';
@@ -55,15 +55,15 @@ export default function App() {
       console.log("Getting credentials.");
 
       // Obtain AWS credentials
-      AWS.config.credentials.get(async function (err) {
+      AWS.config.getCredentials(async function (err: any) {
         // Access AWS resources here.
         console.log("AWS get credentials callback invoked.");
         console.log("error", err);
 
         setBackend(new Backend(new AwsClient({
-          secretAccessKey: AWS.config.credentials.secretAccessKey,
-          accessKeyId: AWS.config.credentials.accessKeyId,
-          sessionToken: AWS.config.credentials.sessionToken,
+          secretAccessKey: AWS?.config?.credentials?.secretAccessKey || "",
+          accessKeyId: AWS?.config?.credentials?.accessKeyId || "",
+          sessionToken: AWS?.config?.credentials?.sessionToken || "",
           service: 'execute-api',
           region: 'us-west-2',
         })));
@@ -96,7 +96,7 @@ export default function App() {
     setIsLoading(false);
   }
 
-  let loginButton = "";
+  let loginButton: JSX.Element | null = null;
   if (Util.isLocalhost()) {
     if (!backend) {
       setBackend(new MockBackend());
@@ -112,7 +112,7 @@ export default function App() {
     />;
   }
 
-  let form = "";
+  let form: JSX.Element | null = null;
   if (backend) {
     form = <div>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -123,7 +123,7 @@ export default function App() {
           fullWidth={true}
           inputVariant="outlined"
           margin="normal"
-          onChange={value => setViewDate(value)}
+          onChange={value => setViewDate(value || new Date())}
           value={viewDate}
         />
       </MuiPickersUtilsProvider>
@@ -144,7 +144,6 @@ export default function App() {
       <Button
         color="primary"
         fullWidth={true}
-        margin="normal"
         disabled={isLoading}
         onClick={handleSubmit}
         variant="contained"
