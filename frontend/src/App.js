@@ -1,6 +1,9 @@
 import AWS from 'aws-sdk';
 import { AwsClient } from 'aws4fetch'
 import { GoogleLogin } from 'react-google-login';
+import { Button, TextField } from '@material-ui/core';
+import DateFnsUtils from '@date-io/date-fns';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -10,6 +13,7 @@ export default function App() {
   const [awsClient, setAwsClient] = useState(undefined);
   const [body, setBody] = useState("");
   const [entry, setEntry] = useState({});
+  const [selectedDate, setDate] = useState(new Date());
 
   useEffect(() => {
     console.log("useEffect");
@@ -139,13 +143,36 @@ export default function App() {
         isSignedIn={true}
       />
 
-      <form>
-        <label>
-          Body:
-            <textarea value={body} onChange={event => setBody(event.target.value)} />
-        </label>
-        <input type="button" value="Submit" onClick={event => handleSubmit()} />
-      </form>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <DatePicker
+          autoOk="true"
+          disableFuture="true"
+          fullWidth="true"
+          inputVariant="outlined"
+          margin="normal"
+          onChange={value => setDate(value)}
+          value={selectedDate}
+        />
+      </MuiPickersUtilsProvider>
+
+      <TextField id="body"
+        fullWidth="true"
+        label="Body"
+        margin="normal"
+        multiline="true"
+        onChange={event => setBody(event.target.value)}
+        required="true"
+        rows="12"
+        value={body}
+        variant="outlined"
+      />
+
+      <Button
+        color="primary"
+        fullWidth="true"
+        margin="normal"
+        onClick={event => handleSubmit()}
+        variant="contained" >Submit</Button>
     </div>
   );
 }
