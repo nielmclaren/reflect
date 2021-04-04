@@ -143,3 +143,18 @@ resource "aws_lambda_permission" "api_handler_lambda_invoke_permission" {
   depends_on    = [aws_api_gateway_rest_api.api]
   source_arn    = "${aws_api_gateway_rest_api.api.execution_arn}/*/*"
 }
+
+resource "aws_api_gateway_gateway_response" "gateway_response_4xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  response_type = "DEFAULT_4XX"
+
+  response_templates = {
+    "application/json" = "{\"message\":$context.error.messageString}",
+  }
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'Authorization,Content-Type,X-Amz-Date,X-Amz-Security-Token'",
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'https://reflect.nielmclaren.com'",
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'OPTIONS,POST,GET'",
+  }
+}

@@ -22,6 +22,10 @@ export class Backend {
         if (response && response.ok) {
             return await response.json();
         }
+        if (response.status === 404) {
+            return null;
+        }
+        console.error("Error", response.status, response.statusText);
         return null;
     }
 
@@ -38,6 +42,10 @@ export class Backend {
             method: "POST",
         };
         const response = await this.awsClient.fetch(url, options);
-        return response && response.ok;
+        if (response && response.ok) {
+            return true;
+        }
+        console.error("Error", response.status, response.statusText);
+        return false;
     }
 }

@@ -1,5 +1,5 @@
 import { Database } from './database';
-import { response } from './response';
+import { errorResponse, response } from './response';
 
 type Dependencies = {
     database: Database;
@@ -9,7 +9,10 @@ export async function handleEntriesGet(event: any, entryId: string, dependencies
     console.log("handleEntriesGet");
     console.log("entryId", { entryId });
     const entry = await dependencies.database.getEntry(entryId);
-    return response(event, 200, { body: entry.body });
+    if (entry) {
+        return response(event, 200, { body: entry.body });
+    }
+    return errorResponse(event, 404, "Not found.");
 }
 
 export async function handleEntriesPost(event: any, entryId: string, entry: any, dependencies: Dependencies): Promise<any> {
