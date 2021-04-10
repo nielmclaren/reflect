@@ -6,10 +6,10 @@ export class MockBackend {
     constructor() {
         this.entries = {};
 
-        this.mockEntry(Util.today(), "This is the entry for today.");
-        this.mockEntry(Util.daysAgo(1), "This is the entry for yesterday.");
-        this.mockEntry(Util.daysAgo(2), "This is the entry for the day before yesterday.");
-        this.mockEntry(Util.daysAgo(3), "This is the entry for three days ago.");
+        this.mockEntry(Util.today(), "This is the entry for today.", "Today's moment.");
+        this.mockEntry(Util.daysAgo(1), "This is the entry for yesterday.", "Yesterday's moment.");
+        this.mockEntry(Util.daysAgo(2), "This is the entry for the day before yesterday.", "A recent moment.");
+        this.mockEntry(Util.daysAgo(3), "This is the entry for three days ago.", "A recent moment.");
     }
 
     async getEntry(entryId: string): Promise<any | null> {
@@ -25,7 +25,7 @@ export class MockBackend {
         return true;
     }
 
-    private mockEntry(entryId: string, body: string): void {
-        this.entries[entryId] = { entryId, body };
+    private mockEntry(entryId: string, body: string, moment: string): void {
+        this.entries[entryId] = { entryId, body, moment };
     }
 }

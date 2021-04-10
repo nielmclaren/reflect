@@ -16,12 +16,14 @@ export default function App() {
   const [backend, setBackend] = useState<Backend | MockBackend | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [viewBody, setViewBody] = useState<string>("");
+  const [viewMoment, setViewMoment] = useState<string>("");
   const [viewDate, setViewDate] = useState<Date>(new Date());
 
   useEffect(() => {
     (async function viewDateChanged() {
       console.log("viewDateChanged()");
       setViewBody("");
+      setViewMoment("");
       setIsLoading(true);
 
       if (!backend) {
@@ -36,6 +38,7 @@ export default function App() {
       console.log("entry", entry);
       if (entry) {
         setViewBody(entry.body);
+        setViewMoment(entry.moment);
       }
       setIsLoading(false);
     })();
@@ -85,6 +88,7 @@ export default function App() {
     const entry = {
       entryId: Util.dateToString(viewDate),
       body: viewBody,
+      moment: viewMoment,
     };
 
     setIsLoading(true);
@@ -138,6 +142,19 @@ export default function App() {
         required={true}
         rows="12"
         value={viewBody}
+        variant="outlined"
+      />
+
+      <TextField id="moment"
+        disabled={isLoading}
+        fullWidth={true}
+        label="Moment"
+        margin="normal"
+        multiline={true}
+        onChange={event => setViewMoment(event.target.value)}
+        required={true}
+        rows="2"
+        value={viewMoment}
         variant="outlined"
       />
 
