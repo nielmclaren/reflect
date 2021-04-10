@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-west-2"
+  region  = "us-west-2"
   version = "~>3.0.0"
 }
 
@@ -11,6 +11,10 @@ resource aws_dynamodb_table reflect_table {
   attribute {
     name = "PK"
     type = "S"
+  }
+
+  point_in_time_recovery {
+    enabled = true
   }
 }
 
