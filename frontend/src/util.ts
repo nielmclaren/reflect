@@ -1,6 +1,8 @@
 export class Util {
     static dateToString(date: Date): string {
-        return date.toISOString().slice(0, 10);
+        // Returns a date string for the given date in the local timezone.
+        const offset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds
+        return (new Date(date.getTime() - offset)).toISOString().slice(0, 10);
     }
 
     static today(): string {
