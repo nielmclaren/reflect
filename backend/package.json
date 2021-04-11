@@ -1,14 +1,12 @@
 {
-    "name": "reflect",
+    "name": "reflect-backend",
     "version": "0.0.1",
     "description": "Dear diary...",
-    "main": "index.ts",
     "scripts": {
         "build": "tsc -b",
         "test": "jest --config jest.config.json",
         "test:watch": "jest --config jest.config.json --watch"
     },
-    "keywords": [],
     "author": "Niel McLaren <d@nielmclaren.com>",
     "license": "UNLICENSED",
     "private": true,
