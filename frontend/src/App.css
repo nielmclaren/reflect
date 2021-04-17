@@ -1,1 +1,6 @@
 .App {}
+
+.App .distractor {
+    margin: 12px;
+    text-align: center;
+}

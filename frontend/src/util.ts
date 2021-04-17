@@ -15,6 +15,10 @@ export class Util {
         return Util.dateToString(d);
     }
 
+    static isToday(date: Date): boolean {
+        return this.today() === this.dateToString(date);
+    }
+
     static isLocalhost() {
         return window.location.href.startsWith("http://localhost:3000");
     }

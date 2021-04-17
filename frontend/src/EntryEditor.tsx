@@ -1,7 +1,6 @@
-import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { Button, TextField } from '@material-ui/core';
 
 type Props = {
-    isLoading: boolean
     body: string
     moment: string
     onBodyChange: (value: string) => void
@@ -12,7 +11,6 @@ type Props = {
 export default function EntryEditor(props: Props) {
     return <div>
         <TextField id="body"
-            disabled={props.isLoading}
             fullWidth={true}
             label="Body"
             margin="normal"
@@ -25,7 +23,6 @@ export default function EntryEditor(props: Props) {
         />
 
         <TextField id="moment"
-            disabled={props.isLoading}
             fullWidth={true}
             label="Moment"
             margin="normal"
@@ -40,9 +37,8 @@ export default function EntryEditor(props: Props) {
         <Button
             color="primary"
             fullWidth={true}
-            disabled={props.isLoading}
             onClick={props.onSubmit}
             variant="contained"
-        >{props.isLoading ? <CircularProgress size={24} /> : 'Submit'}</Button>
+        >Submit</Button>
     </div>;
 }

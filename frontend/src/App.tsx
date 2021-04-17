@@ -10,11 +10,14 @@ import { MockBackend } from './mockBackend';
 import { Util } from './util';
 import "./App.css";
 import EntryEditor from './EntryEditor';
+import EntryViewer from './EntryViewer';
+import { CircularProgress } from '@material-ui/core';
 
 export default function App() {
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
   const [backend, setBackend] = useState<Backend | MockBackend | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [viewBody, setViewBody] = useState<string>("");
   const [viewMoment, setViewMoment] = useState<string>("");
   const [viewDate, setViewDate] = useState<Date>(new Date());
@@ -47,6 +50,7 @@ export default function App() {
   function responseGoogle(googleUser: any) {
     if (googleUser.isSignedIn()) {
       console.log("Signed in.");
+      setIsLoggedIn(true);
 
       // Add the Google access token to the Amazon Cognito credentials login map.
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
@@ -116,38 +120,36 @@ export default function App() {
     />;
   }
 
-  let form: JSX.Element | null = null;
-  if (backend) {
-    form = <div>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <DatePicker
-          autoOk={true}
-          disabled={isLoading}
-          disableFuture={true}
-          fullWidth={true}
-          inputVariant="outlined"
-          margin="normal"
-          onChange={value => setViewDate(value || new Date())}
-          value={viewDate}
-        />
-      </MuiPickersUtilsProvider>
-
-      <EntryEditor
-        isLoading={isLoading}
-        body={viewBody}
-        moment={viewMoment}
-        onBodyChange={(value: string) => setViewBody(value)}
-        onMomentChange={(value: string) => setViewMoment(value)}
-        onSubmit={handleSubmit}
+  const datePicker =
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <DatePicker
+        autoOk={true}
+        disableFuture={true}
+        fullWidth={true}
+        inputVariant="outlined"
+        margin="normal"
+        onChange={value => setViewDate(value || new Date())}
+        value={viewDate}
       />
+    </MuiPickersUtilsProvider>;
 
-    </div>;
-  }
+  const entry = Util.isToday(viewDate) ? <EntryEditor
+    body={viewBody}
+    moment={viewMoment}
+    onBodyChange={(value: string) => setViewBody(value)}
+    onMomentChange={(value: string) => setViewMoment(value)}
+    onSubmit={handleSubmit}
+  /> : <EntryViewer
+    body={viewBody}
+    moment={viewMoment}
+  />
 
   return (
     <div className="App">
-      {loginButton}
-      {form}
+      {isLoading ? <div className="distractor"><CircularProgress size={24} /></div> : null}
+      {isLoggedIn ? null : loginButton}
+      {backend && !isLoading ? datePicker : null}
+      {backend && !isLoading ? entry : null}
     </div>
   );
 }

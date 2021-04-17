@@ -1,0 +1,17 @@
+.EntryViewer {}
+
+.EntryViewer-body {
+    margin: 10px;
+}
+
+.EntryViewer label {
+    display: block;
+    font-weight: bold;
+    margin: 1em;
+    padding: 0;
+}
+
+.EntryViewer .blob {
+    margin: 1em 1em 2em 1em;
+}
+
