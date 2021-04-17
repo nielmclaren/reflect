@@ -31,8 +31,8 @@ export default function App() {
         return;
       }
 
-      console.log("viewDate", viewDate, viewDate.toISOString());
-      const entryId = viewDate.toISOString().slice(0, 10);
+      console.log("viewDate", viewDate);
+      const entryId = Util.dateToString(viewDate);
       console.log("entryId", entryId);
       const entry = await backend.getEntry(entryId);
       console.log("entry", entry);
