@@ -14,13 +14,13 @@ export class MockBackend {
 
     async getEntry(entryId: string): Promise<any | null> {
         console.log("getEntry", entryId);
-        await Util.sleep(3000);
+        await Util.sleep(500);
         return this.entries[entryId];
     }
 
     async postEntry(entry: any): Promise<boolean> {
         console.log("postEntry", entry.entryId, entry);
-        await Util.sleep(3000);
+        await Util.sleep(500);
         this.entries[entry.entryId] = Object.assign(entry);
         return true;
     }
