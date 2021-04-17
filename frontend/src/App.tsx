@@ -1,7 +1,6 @@
 import AWS from 'aws-sdk';
 import { AwsClient } from 'aws4fetch'
 import { GoogleLogin } from 'react-google-login';
-import { Button, CircularProgress, TextField } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { useEffect, useState } from "react";
@@ -10,6 +9,7 @@ import { Backend } from './backend';
 import { MockBackend } from './mockBackend';
 import { Util } from './util';
 import "./App.css";
+import EntryEditor from './EntryEditor';
 
 export default function App() {
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
@@ -132,39 +132,15 @@ export default function App() {
         />
       </MuiPickersUtilsProvider>
 
-      <TextField id="body"
-        disabled={isLoading}
-        fullWidth={true}
-        label="Body"
-        margin="normal"
-        multiline={true}
-        onChange={event => setViewBody(event.target.value)}
-        required={true}
-        rows="12"
-        value={viewBody}
-        variant="outlined"
+      <EntryEditor
+        isLoading={isLoading}
+        body={viewBody}
+        moment={viewMoment}
+        onBodyChange={(value: string) => setViewBody(value)}
+        onMomentChange={(value: string) => setViewMoment(value)}
+        onSubmit={handleSubmit}
       />
 
-      <TextField id="moment"
-        disabled={isLoading}
-        fullWidth={true}
-        label="Moment"
-        margin="normal"
-        multiline={true}
-        onChange={event => setViewMoment(event.target.value)}
-        required={true}
-        rows="2"
-        value={viewMoment}
-        variant="outlined"
-      />
-
-      <Button
-        color="primary"
-        fullWidth={true}
-        disabled={isLoading}
-        onClick={handleSubmit}
-        variant="contained"
-      >{isLoading ? <CircularProgress size={24} /> : 'Submit'}</Button>
     </div>;
   }
 
