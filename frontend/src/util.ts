@@ -6,17 +6,36 @@ export class Util {
     }
 
     static today(): string {
-        return Util.dateToString(new Date());
+        return this.dateToString(new Date());
     }
 
-    static daysAgo(daysAgo: number): string {
+    static yesterday(): string {
+        return this.dateToString(this.daysAgo(1));
+    }
+
+    static daysAgo(daysAgo: number): Date {
         const d = new Date();
         d.setDate(d.getDate() - daysAgo);
-        return Util.dateToString(d);
+        return d;
     }
 
     static isToday(date: Date): boolean {
         return this.today() === this.dateToString(date);
+    }
+
+    static isYesterday(date: Date): boolean {
+        return this.yesterday() === this.dateToString(date);
+    }
+
+    static isEditableDate(candidate: Date, now: Date = new Date()): boolean {
+        return this.isToday(candidate) || (this.isYesterday(candidate) && this.dateToTimeInMs(now) < 6 * 60 * 60 * 1000);
+    }
+
+    static dateToTimeInMs(date: Date): number {
+        const second = 1000;
+        const minute = 60 * second;
+        const hour = 60 * minute;
+        return date.getHours() * hour + date.getMinutes() * minute + date.getSeconds() * second;
     }
 
     static isLocalhost() {
