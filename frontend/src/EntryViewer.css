@@ -13,5 +13,6 @@
 
 .EntryViewer .blob {
     margin: 1em 1em 2em 1em;
+    white-space: pre-wrap;
 }
 
