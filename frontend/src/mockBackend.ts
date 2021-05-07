@@ -27,6 +27,10 @@ export class MockBackend {
 
     private mockEntry(date: Date, body: string, moment: string): void {
         const entryId = Util.dateToString(date);
-        this.entries[entryId] = { entryId, body, moment };
+        const created = new Date(date);
+        created.setHours(21);
+        created.setMinutes(30);
+        created.setSeconds(59);
+        this.entries[entryId] = { entryId, body, moment, created };
     }
 }

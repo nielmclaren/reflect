@@ -5,6 +5,12 @@ export class Util {
         return (new Date(date.getTime() - offset)).toISOString().slice(0, 10);
     }
 
+    static dateToTimeString(date: Date): string {
+        // Returns a time string for the given date in the local timezone.
+        const offset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds
+        return (new Date(date.getTime() - offset)).toISOString().slice(11, 19);
+    }
+
     static daysAgoString(daysAgo: number): string {
         return this.dateToString(this.daysAgo(daysAgo));
     }

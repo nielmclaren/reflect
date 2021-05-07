@@ -19,6 +19,7 @@ export default function App() {
   const [backend, setBackend] = useState<Backend | MockBackend | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [viewCreated, setViewCreated] = useState<Date>(new Date());
   const [viewBody, setViewBody] = useState<string>("");
   const [viewMoment, setViewMoment] = useState<string>("");
   const [viewDate, setViewDate] = useState<Date>(new Date());
@@ -41,6 +42,7 @@ export default function App() {
       const entry = await backend.getEntry(entryId);
       console.log("entry", entry);
       if (entry) {
+        setViewCreated(entry.created);
         setViewBody(entry.body);
         setViewMoment(entry.moment);
       }
@@ -145,6 +147,7 @@ export default function App() {
     onSubmit={handleSubmit}
   /> : <EntryViewer
     body={viewBody}
+    created={viewCreated}
     moment={viewMoment}
   />
 
