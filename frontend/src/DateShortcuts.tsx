@@ -6,10 +6,6 @@ type Props = {
 };
 
 export default function DateShortcuts(props: Props) {
-    const minus390Days = Util.daysAgo(390);
-    const minus30Days = Util.daysAgo(30);
-    const minus1Day = Util.daysAgo(1);
-
     return <div>
         <Button
             color="default"
