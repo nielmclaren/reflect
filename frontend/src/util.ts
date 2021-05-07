@@ -1,4 +1,17 @@
 export class Util {
+    static stringToDate(date: string): Date {
+        const parts = date.split(/\D+/);
+        return new Date(Date.UTC(
+            parseInt(parts[0], 10),
+            parseInt(parts[1], 10) - 1,
+            parseInt(parts[2], 10),
+            parseInt(parts[3], 10),
+            parseInt(parts[4], 10),
+            parseInt(parts[5], 10),
+            parseInt(parts[6], 10)
+        ));
+    }
+
     static dateToString(date: Date): string {
         // Returns a date string for the given date in the local timezone.
         const offset = (new Date()).getTimezoneOffset() * 60000; // Offset in milliseconds

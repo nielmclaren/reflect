@@ -22,6 +22,7 @@ export default function App() {
   const [viewBody, setViewBody] = useState<string>("");
   const [viewCreated, setViewCreated] = useState<Date>(new Date());
   const [viewIsRead, setViewIsRead] = useState<boolean>(false);
+  const [viewLastReadAt, setViewLastReadAt] = useState<Date | undefined>(undefined);
   const [viewMoment, setViewMoment] = useState<string>("");
   const [viewDate, setViewDate] = useState<Date>(new Date());
 
@@ -31,6 +32,7 @@ export default function App() {
       setViewBody("");
       setViewCreated(new Date());
       setViewIsRead(false);
+      setViewLastReadAt(undefined);
       setViewMoment("");
       setIsLoading(true);
 
@@ -46,8 +48,9 @@ export default function App() {
       console.log("entry", entry);
       if (entry) {
         setViewBody(entry.body);
-        setViewCreated(entry.created);
+        setViewCreated(Util.stringToDate(entry.created));
         setViewIsRead(entry.isRead);
+        setViewLastReadAt(entry.lastReadAt);
         setViewMoment(entry.moment);
       }
       setIsLoading(false);
@@ -96,13 +99,16 @@ export default function App() {
       return;
     }
 
+    const now = new Date();
     const entry = {
       entryId: Util.dateToString(viewDate),
       isRead: true,
+      lastReadAt: now,
     };
 
     // Optimistic
     setViewIsRead(true);
+    setViewLastReadAt(now);
 
     // TODO: Smaller loading indicator for mark as read.
     //setIsLoading(true);
@@ -179,6 +185,7 @@ export default function App() {
     body={viewBody}
     created={viewCreated}
     isRead={viewIsRead}
+    lastReadAt={viewLastReadAt}
     moment={viewMoment}
     onMarkRead={() => handleMarkAsRead()}
   />

@@ -6,6 +6,7 @@ type Props = {
     body: string
     created: Date
     isRead: boolean
+    lastReadAt: Date | undefined
     moment: string
     onMarkRead: () => void
 };
@@ -18,6 +19,7 @@ export default function EntryViewer(props: Props) {
         variant="contained"
     >Mark Read</Button>;
 
+    const lastReadAt = props.lastReadAt ? 'Yes - ' + props.lastReadAt : 'Yes but when?';
 
     return <div className="EntryViewer">
         <label className="EntryViewer-bodyLabel">Body</label>
@@ -27,7 +29,7 @@ export default function EntryViewer(props: Props) {
         <label className="EntryViewer-createdLabel">Submitted</label>
         <div className="EntryViewer-created blob">{Util.dateToTimeString(props.created)}</div>
         <label className="EntryViewer-isReadLabel">Is read</label>
-        <div className="EntryViewer-isRead blob">{props.isRead ? 'Yes' : 'No'}</div>
+        <div className="EntryViewer-isRead blob">{props.isRead ? lastReadAt : 'No'}</div>
         {props.isRead ? '' : markReadButton}
     </div>;
 }

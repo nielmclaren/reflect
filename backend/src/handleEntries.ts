@@ -11,7 +11,13 @@ export async function handleEntriesGet(event: any, entryId: string, dependencies
     const entry = await dependencies.database.getEntry(entryId);
     console.log("entry", { entry });
     if (entry) {
-        return response(event, 200, { body: entry.body, created: entry.createDecipher, isRead: entry.isRead, moment: entry.moment });
+        return response(event, 200, {
+            body: entry.body,
+            created: entry.created,
+            isRead: entry.isRead,
+            lastReadAt: entry.lastReadAt,
+            moment: entry.moment,
+        });
     }
     return errorResponse(event, 404, "Not found.");
 }

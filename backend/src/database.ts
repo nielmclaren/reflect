@@ -34,6 +34,7 @@ export class Database {
                 entryId: 'string',
                 body: 'string',
                 isRead: { type: 'boolean', default: () => false },
+                lastReadAt: 'string',
                 moment: 'string',
                 type: { type: 'string', default: () => 'ENTRY' },
             },
