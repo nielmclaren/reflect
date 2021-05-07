@@ -12,6 +12,7 @@ import "./App.css";
 import EntryEditor from './EntryEditor';
 import EntryViewer from './EntryViewer';
 import { CircularProgress } from '@material-ui/core';
+import DateShortcuts from './DateShortcuts';
 
 export default function App() {
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || "";
@@ -120,11 +121,14 @@ export default function App() {
     />;
   }
 
+  const dateShortcuts = <DateShortcuts onChange={(value: Date) => setViewDate(value)} />;
+
   const datePicker =
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <DatePicker
         autoOk={true}
         disableFuture={true}
+        format="yyyy-MM-dd"
         fullWidth={true}
         inputVariant="outlined"
         margin="normal"
@@ -148,7 +152,8 @@ export default function App() {
     <div className="App">
       {isLoading ? <div className="distractor"><CircularProgress size={24} /></div> : null}
       {isLoggedIn ? null : loginButton}
-      {backend && !isLoading ? datePicker : null}
+      { dateShortcuts}
+      {backend ? datePicker : null}
       {backend && !isLoading ? entry : null}
     </div>
   );
