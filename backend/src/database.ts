@@ -33,6 +33,7 @@ export class Database {
                 PK: { partitionKey: true, default: data => `ENTRY#${data.entryId}` },
                 entryId: 'string',
                 body: 'string',
+                isRead: { type: 'boolean', default: () => false },
                 moment: 'string',
                 type: { type: 'string', default: () => 'ENTRY' },
             },

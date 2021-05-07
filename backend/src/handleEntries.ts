@@ -2,7 +2,7 @@ import { Database } from './database';
 import { errorResponse, response } from './response';
 
 type Dependencies = {
-    database: Database;
+    database: Database
 };
 
 export async function handleEntriesGet(event: any, entryId: string, dependencies: Dependencies): Promise<any> {
@@ -11,7 +11,7 @@ export async function handleEntriesGet(event: any, entryId: string, dependencies
     const entry = await dependencies.database.getEntry(entryId);
     console.log("entry", { entry });
     if (entry) {
-        return response(event, 200, { body: entry.body, created: entry.created, moment: entry.moment });
+        return response(event, 200, { body: entry.body, created: entry.createDecipher, isRead: entry.isRead, moment: entry.moment });
     }
     return errorResponse(event, 404, "Not found.");
 }

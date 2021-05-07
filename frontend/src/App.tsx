@@ -19,8 +19,9 @@ export default function App() {
   const [backend, setBackend] = useState<Backend | MockBackend | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [viewCreated, setViewCreated] = useState<Date>(new Date());
   const [viewBody, setViewBody] = useState<string>("");
+  const [viewCreated, setViewCreated] = useState<Date>(new Date());
+  const [viewIsRead, setViewIsRead] = useState<boolean>(false);
   const [viewMoment, setViewMoment] = useState<string>("");
   const [viewDate, setViewDate] = useState<Date>(new Date());
 
@@ -28,6 +29,8 @@ export default function App() {
     (async function viewDateChanged() {
       console.log("viewDateChanged()");
       setViewBody("");
+      setViewCreated(new Date());
+      setViewIsRead(false);
       setViewMoment("");
       setIsLoading(true);
 
@@ -42,8 +45,9 @@ export default function App() {
       const entry = await backend.getEntry(entryId);
       console.log("entry", entry);
       if (entry) {
-        setViewCreated(entry.created);
         setViewBody(entry.body);
+        setViewCreated(entry.created);
+        setViewIsRead(entry.isRead);
         setViewMoment(entry.moment);
       }
       setIsLoading(false);
@@ -82,6 +86,32 @@ export default function App() {
     else {
       throw new Error("Got Google response but not signed in.");
     }
+  }
+
+  async function handleMarkAsRead() {
+    console.log("Handle mark as read.");
+
+    if (!backend) {
+      console.log("Backend not ready yet.");
+      return;
+    }
+
+    const entry = {
+      entryId: Util.dateToString(viewDate),
+      isRead: true,
+    };
+
+    // Optimistic
+    setViewIsRead(true);
+
+    // TODO: Smaller loading indicator for mark as read.
+    //setIsLoading(true);
+    if (await backend.postEntry(entry)) {
+      console.log("Success");
+    } else {
+      console.log("Failure");
+    }
+    //setIsLoading(false);
   }
 
   async function handleSubmit() {
@@ -148,7 +178,9 @@ export default function App() {
   /> : <EntryViewer
     body={viewBody}
     created={viewCreated}
+    isRead={viewIsRead}
     moment={viewMoment}
+    onMarkRead={() => handleMarkAsRead()}
   />
 
   return (
