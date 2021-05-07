@@ -5,12 +5,16 @@ export class Util {
         return (new Date(date.getTime() - offset)).toISOString().slice(0, 10);
     }
 
-    static today(): string {
+    static todayString(): string {
         return this.dateToString(new Date());
     }
 
-    static yesterday(): string {
+    static yesterdayString(): string {
         return this.dateToString(this.daysAgo(1));
+    }
+
+    static daysAgoString(daysAgo: number): string {
+        return this.dateToString(this.daysAgo(daysAgo));
     }
 
     static daysAgo(daysAgo: number): Date {
@@ -20,11 +24,11 @@ export class Util {
     }
 
     static isToday(date: Date): boolean {
-        return this.today() === this.dateToString(date);
+        return this.todayString() === this.dateToString(date);
     }
 
     static isYesterday(date: Date): boolean {
-        return this.yesterday() === this.dateToString(date);
+        return this.yesterdayString() === this.dateToString(date);
     }
 
     static isEditableDate(candidate: Date, now: Date = new Date()): boolean {

@@ -133,7 +133,7 @@ export default function App() {
       />
     </MuiPickersUtilsProvider>;
 
-  const entry = Util.isToday(viewDate) ? <EntryEditor
+  const entry = Util.isEditableDate(viewDate) ? <EntryEditor
     body={viewBody}
     moment={viewMoment}
     onBodyChange={(value: string) => setViewBody(value)}
