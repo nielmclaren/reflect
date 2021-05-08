@@ -20,7 +20,7 @@ export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [viewBody, setViewBody] = useState<string>("");
-  const [viewCreated, setViewCreated] = useState<Date>(new Date());
+  const [viewSubmittedAt, setViewSubmittedAt] = useState<Date>(new Date());
   const [viewIsRead, setViewIsRead] = useState<boolean>(false);
   const [viewLastReadAt, setViewLastReadAt] = useState<Date | undefined>(undefined);
   const [viewMoment, setViewMoment] = useState<string>("");
@@ -30,7 +30,7 @@ export default function App() {
     (async function viewDateChanged() {
       console.log("viewDateChanged()");
       setViewBody("");
-      setViewCreated(new Date());
+      setViewSubmittedAt(new Date());
       setViewIsRead(false);
       setViewLastReadAt(undefined);
       setViewMoment("");
@@ -48,7 +48,7 @@ export default function App() {
       console.log("entry", entry);
       if (entry) {
         setViewBody(entry.body);
-        setViewCreated(Util.stringToDate(entry.created));
+        setViewSubmittedAt(Util.stringToDate(entry.submittedAt));
         setViewIsRead(entry.isRead);
         setViewLastReadAt(entry.lastReadAt);
         setViewMoment(entry.moment);
@@ -132,6 +132,7 @@ export default function App() {
       entryId: Util.dateToString(viewDate),
       body: viewBody,
       moment: viewMoment,
+      submittedAt: new Date().toISOString(),
     };
 
     setIsLoading(true);
@@ -183,7 +184,7 @@ export default function App() {
     onSubmit={handleSubmit}
   /> : <EntryViewer
     body={viewBody}
-    created={viewCreated}
+    submittedAt={viewSubmittedAt}
     isRead={viewIsRead}
     lastReadAt={viewLastReadAt}
     moment={viewMoment}

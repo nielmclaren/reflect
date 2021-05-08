@@ -62,12 +62,12 @@ data "aws_iam_policy_document" "api_handler_dynamodb_policy_document" {
       "dynamodb:UpdateItem",
       "dynamodb:DeleteItem"
     ]
-    resources = ["${local.reflect_table_arn}", "${local.reflect_table_arn}/*"]
+    resources = [local.reflect_table_arn, "${local.reflect_table_arn}/*"]
   }
 }
 
 resource aws_iam_role_policy api_handler_lambda_dynamodb_policy {
-  name = "ApiHandlerDynamoDB"
+  name   = "ApiHandlerDynamoDB"
   role   = aws_iam_role.api_handler_role.name
   policy = data.aws_iam_policy_document.api_handler_dynamodb_policy_document.json
 }

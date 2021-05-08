@@ -28,11 +28,11 @@ export class MockBackend {
     private mockEntry(date: Date, body: string, moment: string, isRead: boolean): void {
         const entryId = Util.dateToString(date);
         const lastReadAt = Util.daysAgo(2).toISOString();
-        const createdDate = new Date(date);
-        createdDate.setHours(21);
-        createdDate.setMinutes(30);
-        createdDate.setSeconds(59);
-        const created = createdDate.toISOString();
-        this.entries[entryId] = { entryId, body, created, isRead, lastReadAt, moment };
+        const submittedAtDate = new Date(date);
+        submittedAtDate.setHours(21);
+        submittedAtDate.setMinutes(30);
+        submittedAtDate.setSeconds(59);
+        const submittedAt = submittedAtDate.toISOString();
+        this.entries[entryId] = { entryId, body, submittedAt, isRead, lastReadAt, moment };
     }
 }

@@ -4,7 +4,7 @@ import { Util } from "./util";
 
 type Props = {
     body: string
-    created: Date
+    submittedAt: Date
     isRead: boolean
     lastReadAt: Date | undefined
     moment: string
@@ -26,8 +26,8 @@ export default function EntryViewer(props: Props) {
         <div className="EntryViewer-body blob">{props.body}</div>
         <label className="EntryViewer-momentLabel">Moment</label>
         <div className="EntryViewer-moment blob">{props.moment}</div>
-        <label className="EntryViewer-createdLabel">Submitted</label>
-        <div className="EntryViewer-created blob">{Util.dateToTimeString(props.created)}</div>
+        <label className="EntryViewer-submittedAtLabel">Submitted</label>
+        <div className="EntryViewer-submittedAt blob">{Util.dateToTimeString(props.submittedAt)}</div>
         <label className="EntryViewer-isReadLabel">Is read</label>
         <div className="EntryViewer-isRead blob">{props.isRead ? lastReadAt : 'No'}</div>
         {props.isRead ? '' : markReadButton}

@@ -13,7 +13,7 @@ export async function handleEntriesGet(event: any, entryId: string, dependencies
     if (entry) {
         return response(event, 200, {
             body: entry.body,
-            created: entry.created,
+            submittedAt: entry.submittedAt,
             isRead: entry.isRead,
             lastReadAt: entry.lastReadAt,
             moment: entry.moment,
