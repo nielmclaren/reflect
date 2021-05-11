@@ -10,9 +10,9 @@ export default function DateShortcuts(props: Props) {
         <Button
             color="default"
             fullWidth={false}
-            onClick={event => props.onChange(Util.daysAgo(390))}
+            onClick={event => props.onChange(Util.daysAgo(350))}
             variant="contained"
-        >-390 days</Button>
+        >-350 days</Button>
 
         <Button
             color="default"
