@@ -1,21 +1,31 @@
 resource "aws_lambda_function" "migration_lambda" {
-  filename      = "output/package.zip"
+  filename      = "${path.module}/output/lambda.zip"
   function_name = "reflect-migration"
   handler       = "index.handler"
   role          = aws_iam_role.migration_role.arn
+  layers        = [aws_lambda_layer_version.migration_lambda_layer.arn]
   runtime       = "nodejs12.x"
   timeout       = 60
-
-  # The filebase64sha256() function is available in Terraform 0.11.12 and later
-  # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
-  # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
-  source_code_hash = filebase64sha256("output/package.zip")
+  source_code_hash = filebase64sha256("output/lambda.zip")
 }
 
 data "archive_file" "package" {
   type        = "zip"
-  output_path = "${path.module}/output/package.zip"
-  source_dir  = "${path.module}/dist"
+  output_path = "${path.module}/output/lambda.zip"
+  source_dir  = "${path.module}/dist/lambda"
+}
+
+resource "aws_lambda_layer_version" "migration_lambda_layer" {
+  filename            = "${path.module}/output/layer.zip"
+  layer_name          = "MigrationLambdaLayer"
+  compatible_runtimes = ["nodejs12.x"]
+  source_code_hash = filebase64sha256("output/layer.zip")
+}
+
+data "archive_file" "layer_package" {
+  type        = "zip"
+  output_path = "${path.module}/output/layer.zip"
+  source_dir  = "${path.module}/dist/layer"
 }
 
 data "aws_iam_policy_document" "migration_policy_document" {
@@ -46,7 +56,7 @@ data "aws_iam_policy_document" "migration_logging_policy_document" {
 }
 
 resource "aws_iam_role_policy" "migration_logging" {
-  name   = "ApiHandlerLogging"
+  name   = "MigrationLogging"
   role   = aws_iam_role.migration_role.name
   policy = data.aws_iam_policy_document.migration_logging_policy_document.json
 }
@@ -68,7 +78,7 @@ data "aws_iam_policy_document" "migration_dynamodb_policy_document" {
 }
 
 resource "aws_iam_role_policy" "migration_lambda_dynamodb_policy" {
-  name   = "ApiHandlerDynamoDB"
+  name   = "MigrationDynamoDB"
   role   = aws_iam_role.migration_role.name
   policy = data.aws_iam_policy_document.migration_dynamodb_policy_document.json
 }
