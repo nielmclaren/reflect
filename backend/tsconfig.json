@@ -7,7 +7,7 @@
         ],
         "module": "commonjs",
         "moduleResolution": "node",
-        "outDir": "./dist",
+        "outDir": "./dist/lambda",
         "allowJs": false,
         "alwaysStrict": true,
         "esModuleInterop": true,

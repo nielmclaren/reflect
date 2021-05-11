@@ -1,11 +1,17 @@
 .PHONY: clean build init apply
 
 clean:
-	rm -rf dist
+	rm -rf dist/lambda
 
 build: clean
 	yarn build
-	cp -R node_modules dist/ # TODO Don't include dev dependencies in lambda package.
+
+clean_layer:
+	rm -rf dist/layer
+
+build_layer: clean_layer
+	mkdir -p dist/layer/nodejs # Lambda Layer requires nodejs subfolder
+	yarn install --production --modules-folder dist/layer/nodejs/node_modules
 
 init:
 	aws-vault exec nielmclaren -- terraform init
