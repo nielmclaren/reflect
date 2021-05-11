@@ -36,6 +36,7 @@ export class Database {
                 isRead: { type: 'boolean', default: () => false },
                 lastReadAt: 'string',
                 moment: 'string',
+                submittedAt: 'string',
                 type: { type: 'string', default: () => 'ENTRY' },
             },
             table: this.table,
