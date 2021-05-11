@@ -82,3 +82,16 @@ resource "aws_iam_role_policy" "migration_lambda_dynamodb_policy" {
   role   = aws_iam_role.migration_role.name
   policy = data.aws_iam_policy_document.migration_dynamodb_policy_document.json
 }
+
+data "aws_iam_policy_document" "migration_import_bucket_policy_document" {
+  statement {
+    actions   = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::nielmclaren-reflect-import/*"]
+  }
+}
+
+resource "aws_iam_role_policy" "migration_import_bucket" {
+  name   = "MigrationImportBucket"
+  role   = aws_iam_role.migration_role.name
+  policy = data.aws_iam_policy_document.migration_import_bucket_policy_document.json
+}
